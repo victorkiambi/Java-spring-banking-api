@@ -18,7 +18,7 @@ public class Customer {
     private String email;
     private Integer phone;
 
-    @OneToMany(mappedBy = "user_id")
+    @OneToMany(mappedBy = "customer")
     private List<Account> accounts;
 
 
