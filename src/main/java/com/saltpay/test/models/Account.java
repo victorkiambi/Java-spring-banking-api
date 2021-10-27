@@ -19,7 +19,6 @@ public class Account{
 
     private String acc_name;
     private String acc_branch;
-    private Date created_at;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
