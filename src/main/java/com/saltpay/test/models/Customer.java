@@ -4,7 +4,6 @@ import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.NotFound;
 
 import javax.persistence.*;
 import java.util.List;
@@ -16,15 +15,12 @@ import java.util.List;
 public class Customer {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private Long customer_id;
+    private Long customerId;
 
-    @NotNull()
     private String name;
 
-    @NotNull()
     private String email;
 
-    @NotNull
     private Integer phone;
 
     @OneToMany(mappedBy = "customer")

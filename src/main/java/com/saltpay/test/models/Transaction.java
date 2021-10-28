@@ -15,12 +15,12 @@ import java.util.Date;
 public class Transaction {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private Long transaction_id;
+    private Long transactionId;
     private double amount;
 
     private TransactionType transactionType;
 
     @ManyToOne
-    @JoinColumn(name = "acc_id")
+    @JoinColumn(name = "accId", insertable = false, updatable = false)
     private Account account;
 }

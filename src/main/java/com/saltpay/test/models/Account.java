@@ -15,13 +15,13 @@ import java.util.List;
 public class Account{
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private  Long acc_id;
+    private  Long accId;
 
-    private String acc_name;
-    private String acc_branch;
-
+    private String accName;
+    private String accBranch;
+    private Long customerId;
     @ManyToOne
-    @JoinColumn(name = "customer_id")
+    @JoinColumn(name = "customerId", insertable = false, updatable = false)
     private Customer customer;
 
     @OneToMany(mappedBy = "account")

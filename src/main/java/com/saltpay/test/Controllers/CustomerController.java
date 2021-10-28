@@ -29,6 +29,12 @@ public class CustomerController {
         return new ResponseEntity<>(customerService.getAllCustomers(), HttpStatus.OK);
     }
 
+    @GetMapping("/api/v1/customer/{customerId}")
+    @ResponseBody
+    public CustomerDTO getCustomers(@PathVariable Long customerId) {
+        return customerService.getCustomerById(customerId);
+    }
+
     @PostMapping(path = "/api/v1/customers",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)

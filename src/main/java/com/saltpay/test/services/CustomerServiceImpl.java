@@ -3,10 +3,10 @@ package com.saltpay.test.services;
 import com.saltpay.test.DTO.CustomerDTO;
 import com.saltpay.test.models.Customer;
 import com.saltpay.test.repositories.CustomerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,9 +32,15 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.save(customer);
     }
 
+    @Override
+    public CustomerDTO getCustomerById(Long customerId) {
+        Optional<Customer> customer =customerRepository.findByCustomerId(customerId);
+        return new CustomerDTO(customer);
+    }
+
     private CustomerDTO convertToCustomerDTO(Customer customer) {
         CustomerDTO customerDTO = new CustomerDTO();
-        customerDTO.setCustomer_id(customer.getCustomer_id());
+        customerDTO.setCustomerId(customer.getCustomerId());
         customerDTO.setName(customer.getName());
         customerDTO.setEmail(customer.getEmail());
         customerDTO.setPhone(customer.getPhone());
