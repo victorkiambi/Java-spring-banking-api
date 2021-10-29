@@ -6,7 +6,6 @@ import com.saltpay.test.repositories.CustomerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,9 +32,16 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDTO getCustomerById(Long customerId) {
-        Optional<Customer> customer =customerRepository.findByCustomerId(customerId);
-        return new CustomerDTO(customer);
+    public List<CustomerDTO> getCustomerById(Long customerId) {
+        List<CustomerDTO> customer =customerRepository.findByCustomerId(customerId).stream().
+                map(this::convertToCustomerDTO).collect(Collectors.toList());
+        if (customer.isEmpty()){
+            return null;
+        }
+        else {
+            System.out.println("we are here");
+        return customer;
+    }
     }
 
     private CustomerDTO convertToCustomerDTO(Customer customer) {
@@ -44,6 +50,7 @@ public class CustomerServiceImpl implements CustomerService {
         customerDTO.setName(customer.getName());
         customerDTO.setEmail(customer.getEmail());
         customerDTO.setPhone(customer.getPhone());
+//        customerDTO.setAccounts(customer.getAccounts());
 
         System.out.println(customerDTO);
         return customerDTO;

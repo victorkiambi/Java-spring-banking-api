@@ -8,7 +8,8 @@ import com.saltpay.test.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -25,7 +26,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account saveAccount(Account account) {
-        Optional<Customer> customer = customerRepository.findByCustomerId(account.getCustomerId());
+        List<Customer> customer = customerRepository.findByCustomerId(account.getCustomerId());
         if (customer.isEmpty()){
             return null;
         }
@@ -40,12 +41,10 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDTO getAccountByAccId(Long id) {
-        Optional<Account> account =  accountRepository.findByAccId(id);
-        return new AccountDTO(account);
+    public List<AccountDTO> getAccountByAccId(Long id) {
+        return accountRepository.findByAccId(id).
+                stream().map(this::convertToAccountDTO).collect(Collectors.toList());
     }
-
-
 
     private AccountDTO convertToAccountDTO(Account account) {
         Customer customer = new Customer();

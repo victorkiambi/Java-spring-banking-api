@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.rmi.ServerException;
+import java.util.List;
 
 @RestController
 public class AccountController {
@@ -20,7 +21,7 @@ public class AccountController {
     }
 
     @GetMapping("/api/v1/accounts/{accId}")
-    public AccountDTO getAccount(@PathVariable Long accId){
+    public List<AccountDTO> getAccount(@PathVariable Long accId){
         return accountService.getAccountByAccId(accId);
 
     }

@@ -31,7 +31,8 @@ public class CustomerController {
 
     @GetMapping("/api/v1/customer/{customerId}")
     @ResponseBody
-    public CustomerDTO getCustomers(@PathVariable Long customerId) {
+    public List<CustomerDTO> getCustomers(@PathVariable Long customerId) {
+        System.out.println("customer id" + customerId);
         return customerService.getCustomerById(customerId);
     }
 
