@@ -1,9 +1,13 @@
 package com.saltpay.test.services;
 
 import com.saltpay.test.DTO.CustomerDTO;
+import com.saltpay.test.models.Account;
 import com.saltpay.test.models.Customer;
+import com.saltpay.test.repositories.AccountRepository;
 import com.saltpay.test.repositories.CustomerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,12 +15,15 @@ import java.util.stream.Collectors;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
-
-    CustomerRepository customerRepository;
+    @Autowired
+    private final CustomerRepository customerRepository;
 
     public CustomerServiceImpl(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
+    /*
+    Get all customers with their account details
+     */
 
     @Override
     public List<CustomerDTO> getAllCustomers() {
@@ -26,11 +33,19 @@ public class CustomerServiceImpl implements CustomerService {
                 collect(Collectors.toList());
     }
 
+    /*
+    Create new Customer
+     */
     @Override
+    @Transactional
     public Customer save(Customer customer) {
-        return customerRepository.save(customer);
+        customerRepository.save(customer);
+        return customer;
     }
 
+    /*
+    Get customer via Id
+     */
     @Override
     public List<CustomerDTO> getCustomerById(Long customerId) {
         List<CustomerDTO> customer =customerRepository.findByCustomerId(customerId).stream().
@@ -39,20 +54,20 @@ public class CustomerServiceImpl implements CustomerService {
             return null;
         }
         else {
-            System.out.println("we are here");
-        return customer;
-    }
+            return customer;
+        }
     }
 
+    /*
+    Entity to DTO conversion
+     */
     private CustomerDTO convertToCustomerDTO(Customer customer) {
         CustomerDTO customerDTO = new CustomerDTO();
         customerDTO.setCustomerId(customer.getCustomerId());
-        customerDTO.setName(customer.getName());
-        customerDTO.setEmail(customer.getEmail());
-        customerDTO.setPhone(customer.getPhone());
-//        customerDTO.setAccounts(customer.getAccounts());
-
-        System.out.println(customerDTO);
+        customerDTO.setCustomerName(customer.getCustomerName());
+        customerDTO.setCustomerEmail(customer.getCustomerEmail());
+        customerDTO.setCustomerPhone(customer.getCustomerPhone());
+        customerDTO.setAccounts(customer.getAccounts());
         return customerDTO;
     }
 

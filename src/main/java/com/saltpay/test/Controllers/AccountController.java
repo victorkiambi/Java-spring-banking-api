@@ -20,18 +20,25 @@ public class AccountController {
         this.accountService = accountService;
     }
 
+    /*
+    Get Account Details via accountId
+     */
     @GetMapping("/api/v1/accounts/{accId}")
     public List<AccountDTO> getAccount(@PathVariable Long accId){
-        return accountService.getAccountByAccId(accId);
+        return accountService.getAccount(accId);
 
     }
 
+    /*
+    Create new account details
+     */
     @PostMapping("/api/v1/accounts")
     public ResponseEntity<Account> create(@Valid @RequestBody Account newAccount) throws ServerException {
         Account account = (Account) accountService.saveAccount(newAccount);
         if (account == null) {
             throw new ServerException("No customer Found");
         } else {
+
             return new ResponseEntity<>(account, HttpStatus.CREATED);
         }
     }

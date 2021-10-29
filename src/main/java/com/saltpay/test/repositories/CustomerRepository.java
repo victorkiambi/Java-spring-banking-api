@@ -13,9 +13,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     @Override
     List<Customer> findAll();
 
-//    @Query("select c from Customer c where c.customerId = :id")
     List<Customer> findByCustomerId(Long customerId);
 
-//    Optional<Customer> findCustomerByCustomerId(Long id);
 
 }

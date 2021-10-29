@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -14,17 +15,18 @@ import java.util.List;
 @NoArgsConstructor
 public class Customer {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long customerId;
 
-    private String name;
+    private String customerName;
 
-    private String email;
+    private String customerEmail;
 
-    private Integer phone;
+    private Integer customerPhone;
 
-    @OneToMany(mappedBy = "customer")
-    private List<Account> accounts;
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.MERGE)
+    private List<Account> accounts = new ArrayList<>();
+
 
 
 }

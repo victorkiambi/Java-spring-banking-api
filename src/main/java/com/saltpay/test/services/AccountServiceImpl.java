@@ -24,35 +24,61 @@ public class AccountServiceImpl implements AccountService {
         this.accountRepository = accountRepository;
     }
 
+    /*
+    Create new account for customer
+
+    Check if customer exists first
+     */
     @Override
     public Account saveAccount(Account account) {
-        List<Customer> customer = customerRepository.findByCustomerId(account.getCustomerId());
+
+        //check if customer exists
+        List<Customer> customer = customerRepository.findByCustomerId(account.getCustomer().getCustomerId());
         if (customer.isEmpty()){
             return null;
         }
         else{
             Account account1 = new Account();
-            account1.setAccBranch(account.getAccBranch());
+            account1.setCustomer(account.getCustomer());
             account1.setAccName(account.getAccName());
-            account1.setCustomerId(account.getCustomerId());
+            account1.setAccBranch(account.getAccBranch());
+            account1.setDeposit(account.getDeposit());
+            account1.setActualBalance(account1.getDeposit());
             return accountRepository.save(account1);
         }
-
     }
 
+    /*
+    Get Account via account Id
+     */
     @Override
-    public List<AccountDTO> getAccountByAccId(Long id) {
-        return accountRepository.findByAccId(id).
-                stream().map(this::convertToAccountDTO).collect(Collectors.toList());
+    public List<AccountDTO> getAccount(Long id) {
+        List<AccountDTO> accountDTOS =accountRepository.findByAccId(id).
+                stream().
+                map(this::convertToAccountDTO).
+                collect(Collectors.toList());
+
+        if (accountDTOS.isEmpty()){
+            return null;
+        }
+        else {
+            return accountDTOS;
+        }
     }
 
+    /*
+    Entity to DTO cnversion
+     */
     private AccountDTO convertToAccountDTO(Account account) {
-        Customer customer = new Customer();
+        Customer customer = account.getCustomer();
         AccountDTO accountDTO = new AccountDTO();
-        accountDTO.setName(customer.getName());
-        accountDTO.setEmail(customer.getEmail());
+        accountDTO.setAccId(account.getAccId());
         accountDTO.setAccName(account.getAccName());
         accountDTO.setAccBranch(account.getAccBranch());
+        accountDTO.setActualBalance(account.getActualBalance());
+        accountDTO.setName(customer.getCustomerName());
+        accountDTO.setEmail(customer.getCustomerEmail());
+        accountDTO.setPhone(customer.getCustomerPhone());
         return accountDTO;
     }
 }

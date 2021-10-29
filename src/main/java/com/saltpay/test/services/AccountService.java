@@ -9,5 +9,6 @@ public interface AccountService {
 
     Object saveAccount(Account account);
 
-    List<AccountDTO> getAccountByAccId(Long accId);
+
+    List<AccountDTO> getAccount(Long accId);
 }
