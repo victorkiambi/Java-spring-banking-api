@@ -11,4 +11,6 @@ public interface TransactionService {
     List<TransactionDTO> findTransactionsByAccount(Long accId);
 
     Account createTransaction(Transaction transaction);
+
+    Account bankTransfer(Transaction newTransaction);
 }

@@ -29,10 +29,10 @@ public class TransactionalController {
     }
 
     /*
-   Create new account Transaction
+    Deposit to own account
     */
-    @PostMapping("/api/v1/transaction")
-    public ResponseEntity<Account> create(@Valid @RequestBody Transaction newTransaction) throws ServerException {
+    @PostMapping("/api/v1/transaction/deposit")
+    public ResponseEntity<Account> createDeposit(@Valid @RequestBody Transaction newTransaction) throws ServerException {
         Account transaction = transactionService.createTransaction(newTransaction);
         if (transaction == null) {
             throw new ServerException("No customer Found");
@@ -40,5 +40,13 @@ public class TransactionalController {
 
             return new ResponseEntity<>(transaction, HttpStatus.CREATED);
         }
+    }
+
+    /*
+    Transfer to different account
+    */
+    @PostMapping("/api/v1/transaction/transfer")
+    public Account createTransfer(@Valid @RequestBody Transaction newTransaction) throws ServerException {
+        return transactionService.bankTransfer(newTransaction);
     }
 }
