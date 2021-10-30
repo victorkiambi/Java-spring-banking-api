@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface AccountService {
 
-    Object saveAccount(Account account);
+    Account saveAccount(Account account);
 
 
     List<AccountDTO> getAccount(Long accId);

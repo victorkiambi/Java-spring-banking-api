@@ -23,9 +23,9 @@ public class AccountController {
     /*
     Get Account Details via accountId
      */
-    @GetMapping("/api/v1/accounts/{accId}")
-    public List<AccountDTO> getAccount(@PathVariable Long accId){
-        return accountService.getAccount(accId);
+    @GetMapping("/api/v1/accounts/{accNo}")
+    public List<AccountDTO> getAccount(@PathVariable Long accNo){
+        return accountService.getAccount(accNo);
 
     }
 

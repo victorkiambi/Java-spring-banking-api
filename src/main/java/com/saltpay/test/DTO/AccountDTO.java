@@ -8,14 +8,14 @@ import java.util.List;
 @Data
 public class AccountDTO {
 
-    private Long accId;
+    private Long accNo;
     private String accName;
     private String accBranch;
-    private double actualBalance;
+    private double minBalance;
     private String name;
     private Integer phone;
     private String email;
-//    private List<Transaction> transaction;
+    private List<Transaction> transaction;
 
 
 }

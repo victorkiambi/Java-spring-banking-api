@@ -1,26 +1,38 @@
 package com.saltpay.test.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.data.repository.cdi.Eager;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.UUID;
 
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class Transaction {
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private Long transactionId;
-    private double amount;
 
+    @Id
+    @GeneratedValue
+    private Long transactionId;
+    private UUID transactionReferenceNo = UUID.randomUUID();
+    private double transactionAmount;
     private TransactionType transactionType;
 
-    @ManyToOne
-    @JoinColumn(name = "accId", insertable = false, updatable = false)
+//    @Transient
+    private transient Long senderAccNo;
+
+//    @Transient
+    private transient Long receiverAccNo;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "acc_No")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Account account;
+
+
 }

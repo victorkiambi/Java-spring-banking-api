@@ -27,6 +27,13 @@ public class Customer {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.MERGE)
     private List<Account> accounts = new ArrayList<>();
 
+    public void addAccount(Account account) {
+        accounts.add(account);
+        account.setCustomer(this);
+    }
 
-
+    public void removeAccount(Account account){
+        accounts.remove(account);
+        account.setCustomer(null);
+    }
 }
