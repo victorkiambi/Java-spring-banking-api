@@ -15,7 +15,7 @@ public class AccountDTO {
     private String name;
     private Integer phone;
     private String email;
-    private List<Transaction> transaction;
+//    private List<Transaction> transaction;
 
 
 }

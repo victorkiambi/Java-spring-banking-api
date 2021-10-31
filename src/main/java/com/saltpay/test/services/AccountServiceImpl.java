@@ -94,7 +94,7 @@ public class AccountServiceImpl implements AccountService {
         accountDTO.setName(customer.getCustomerName());
         accountDTO.setEmail(customer.getCustomerEmail());
         accountDTO.setPhone(customer.getCustomerPhone());
-        accountDTO.setTransaction(account.getTransactions());
+
         return accountDTO;
     }
 }
