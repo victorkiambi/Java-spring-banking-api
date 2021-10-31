@@ -37,6 +37,16 @@ public class Account{
     private List<Transaction> transactions = new ArrayList<>();
 
 
+    public Account(String accName, String accBranch, double minBalance, Customer customer) {
+        this.accName = accName;
+        this.accBranch = accBranch;
+        this.minBalance = minBalance;
+        this.customer = customer;
+    }
+
+
+
+
     public void addTransaction(Transaction transaction){
         transactions.add(transaction);
         transaction.setAccount(this);
@@ -46,6 +56,7 @@ public class Account{
         transactions.remove(transaction);
         transaction.setAccount(null);
     }
+
 
 
 }

@@ -11,4 +11,13 @@ public class TransactionDTO {
     private UUID transactionReferenceNo;
     private double transactionAmount;
     private TransactionType transactionType;
+
+    public TransactionDTO(UUID transactionReferenceNo, double transactionAmount, TransactionType transactionType) {
+        this.transactionReferenceNo= transactionReferenceNo;
+        this.transactionAmount = transactionAmount;
+        this.transactionType = transactionType;
+    }
+
+    public TransactionDTO() {
+    }
 }

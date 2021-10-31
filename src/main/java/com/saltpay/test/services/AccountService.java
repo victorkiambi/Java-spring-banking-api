@@ -10,5 +10,5 @@ public interface AccountService {
     Account saveAccount(Account account);
 
 
-    List<AccountDTO> getAccount(Long accId);
+    AccountDTO getAccount(Long accId);
 }

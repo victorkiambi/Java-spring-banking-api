@@ -34,6 +34,9 @@ public class Customer {
         this.customerPhone = customerPhone;
     }
 
+    public Customer(long l) {
+    }
+
     public void addAccount(Account account) {
         accounts.add(account);
         account.setCustomer(this);

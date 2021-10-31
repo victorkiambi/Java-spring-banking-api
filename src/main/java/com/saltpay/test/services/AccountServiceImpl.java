@@ -18,13 +18,13 @@ import java.util.stream.Collectors;
 public class AccountServiceImpl implements AccountService {
 
     @Autowired
-    private final AccountRepository accountRepository;
+    public final AccountRepository accountRepository;
 
     @Autowired
-    private CustomerRepository customerRepository;
+    public CustomerRepository customerRepository;
 
     @Autowired
-    private TransactionRepository transactionRepository;
+    public TransactionRepository transactionRepository;
 
     public AccountServiceImpl(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
@@ -67,26 +67,22 @@ public class AccountServiceImpl implements AccountService {
     Get Account via account Id
      */
     @Override
-    public List<AccountDTO> getAccount(Long id) {
-        List<AccountDTO> accountDTOS =accountRepository.findByAccNo(id).
-                stream().
-                map(this::convertToAccountDTO).
-                collect(Collectors.toList());
+    public AccountDTO getAccount(Long id) {
+        Account account = accountRepository.findByAccNo(id);
 
-        if (accountDTOS.isEmpty()){
+        if (account == null){
             return null;
         }
         else {
-            return accountDTOS;
+
+            AccountDTO accountDTO = new AccountDTO();
+            Customer customer = account.getCustomer();
+
+            return getAccountDTO(account, accountDTO, customer);
         }
     }
 
-    /*
-    Entity to DTO cnversion
-     */
-    private AccountDTO convertToAccountDTO(Account account) {
-        Customer customer = account.getCustomer();
-        AccountDTO accountDTO = new AccountDTO();
+    private AccountDTO getAccountDTO(Account account, AccountDTO accountDTO, Customer customer) {
         accountDTO.setAccNo(account.getAccNo());
         accountDTO.setAccName(account.getAccName());
         accountDTO.setAccBranch(account.getAccBranch());
@@ -96,5 +92,14 @@ public class AccountServiceImpl implements AccountService {
         accountDTO.setPhone(customer.getCustomerPhone());
 
         return accountDTO;
+    }
+
+    /*
+    Entity to DTO cnversion
+     */
+    private AccountDTO convertToAccountDTO(Account account) {
+        Customer customer = account.getCustomer();
+        AccountDTO accountDTO = new AccountDTO();
+        return getAccountDTO(account, accountDTO, customer);
     }
 }

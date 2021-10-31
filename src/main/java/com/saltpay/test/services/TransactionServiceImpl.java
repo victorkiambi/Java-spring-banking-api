@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
 public class TransactionServiceImpl implements TransactionService{
 
     @Autowired
-    private TransactionRepository transactionRepository;
+    public TransactionRepository transactionRepository;
 
     @Autowired
-    private AccountRepository accountRepository;
+    public AccountRepository accountRepository;
 
     @Override
     public List<TransactionDTO> findTransactionsByAccount(Long accNo) {
@@ -32,13 +32,13 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     public Account createTransaction(Transaction transaction) {
-        List<Account> accounts = getActualBalance(transaction.getSenderAccNo());
+        Account accounts = getActualBalance(transaction.getSenderAccNo());
 
-        if (accounts.isEmpty()){
+        if (accounts == null){
             return null;
         }
         else{
-            double minBalance = accounts.get(0).getMinBalance();
+            double minBalance = accounts.getMinBalance();
             double depositedAmount = transaction.getTransactionAmount();
             double newBalance = minBalance + depositedAmount;
 
@@ -52,17 +52,17 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     public Account bankTransfer(Transaction newTransaction) {
-        List<Account> accounts = getActualBalance(newTransaction.getSenderAccNo());
+        Account accounts = getActualBalance(newTransaction.getSenderAccNo());
 
-        if (accounts.isEmpty())
+        if (accounts == null)
             return null;
 
-        if ((accounts.get(0).getMinBalance() == 0) || (accounts.get(0).getMinBalance() < newTransaction.getTransactionAmount())){
+        if ((accounts.getMinBalance() == 0) || (accounts.getMinBalance() < newTransaction.getTransactionAmount())){
             return null;
         }
         else{
 
-            double senderMinBalance = accounts.get(0).getMinBalance();
+            double senderMinBalance = accounts.getMinBalance();
             double depositedAmount = newTransaction.getTransactionAmount();
             double newSenderBalance = senderMinBalance - depositedAmount;
             Account account = accountRepository.getAccountByAccNo(newTransaction.getSenderAccNo());
@@ -70,8 +70,8 @@ public class TransactionServiceImpl implements TransactionService{
             newTransaction.setTransactionType(TransactionType.TRANSFER_OUT);
             setBalance(account, newSenderBalance, newTransaction);
 
-            List<Account> receiverAccount = getActualBalance(newTransaction.getReceiverAccNo());
-            double receiverMinBalance = receiverAccount.get(0).getMinBalance();
+            Account receiverAccount = getActualBalance(newTransaction.getReceiverAccNo());
+            double receiverMinBalance = receiverAccount.getMinBalance();
             double newReceiverBalance = receiverMinBalance + depositedAmount;
 
             Account account1 = getAccount(newTransaction.getReceiverAccNo());
@@ -91,7 +91,7 @@ public class TransactionServiceImpl implements TransactionService{
     }
 
 
-    private List<Account> getActualBalance(Long senderAccNo) {
+    private Account getActualBalance(Long senderAccNo) {
         return accountRepository.findByAccNo(senderAccNo);
     }
 
