@@ -32,10 +32,10 @@ public class TransactionalController {
     Deposit to own account
     */
     @PostMapping("/api/v1/transaction/deposit")
-    public ResponseEntity<Account> createDeposit(@Valid @RequestBody Transaction newTransaction) throws ServerException {
+    public ResponseEntity<Account> createDeposit(@Valid @RequestBody Transaction newTransaction)  {
         Account transaction = transactionService.createTransaction(newTransaction);
         if (transaction == null) {
-            throw new ServerException("No customer Found");
+            return ResponseEntity.noContent().build();
         } else {
 
             return new ResponseEntity<>(transaction, HttpStatus.CREATED);

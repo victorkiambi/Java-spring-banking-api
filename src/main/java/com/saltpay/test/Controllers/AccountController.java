@@ -33,10 +33,10 @@ public class AccountController {
     Create new account details
      */
     @PostMapping("/api/v1/accounts")
-    public ResponseEntity<Account> create(@Valid @RequestBody Account newAccount) throws ServerException {
-        Account account = (Account) accountService.saveAccount(newAccount);
+    public ResponseEntity<Account> create(@Valid @RequestBody Account newAccount) {
+        Account account = accountService.saveAccount(newAccount);
         if (account == null) {
-            throw new ServerException("No customer Found");
+            return ResponseEntity.noContent().build();
         } else {
 
             return new ResponseEntity<>(account, HttpStatus.CREATED);
