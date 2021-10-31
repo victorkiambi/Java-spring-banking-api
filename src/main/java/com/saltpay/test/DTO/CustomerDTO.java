@@ -17,5 +17,15 @@ public class CustomerDTO {
     private Integer customerPhone;
     private List<Account> accounts;
 
+    public CustomerDTO(Long customerId, String customerName, String customerEmail, Integer customerPhone) {
+        this.customerId = customerId;
+        this.customerName = customerName;
+        this.customerEmail = customerEmail;
+        this.customerPhone = customerPhone;
+    }
+
+    public CustomerDTO() {
+
+    }
 }
 

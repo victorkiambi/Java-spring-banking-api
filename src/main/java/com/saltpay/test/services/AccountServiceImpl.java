@@ -39,8 +39,8 @@ public class AccountServiceImpl implements AccountService {
     public Account saveAccount(Account account) {
 
         //check if customer exists
-        List<Customer> customer = customerRepository.findByCustomerId(account.getCustomer().getCustomerId());
-        if (customer.isEmpty()){
+        Customer customer = customerRepository.findByCustomerId(account.getCustomer().getCustomerId());
+        if (customer == null){
             return null;
         }
         else{

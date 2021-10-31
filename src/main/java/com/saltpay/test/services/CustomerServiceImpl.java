@@ -1,9 +1,7 @@
 package com.saltpay.test.services;
 
 import com.saltpay.test.DTO.CustomerDTO;
-import com.saltpay.test.models.Account;
 import com.saltpay.test.models.Customer;
-import com.saltpay.test.repositories.AccountRepository;
 import com.saltpay.test.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +25,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<CustomerDTO> getAllCustomers() {
+
         return customerRepository.findAll().
                 stream().
                 map(this::convertToCustomerDTO).
@@ -46,21 +45,18 @@ public class CustomerServiceImpl implements CustomerService {
     Get customer via Id
      */
     @Override
-    public List<CustomerDTO> getCustomerById(Long customerId) {
-        List<CustomerDTO> customer =customerRepository.findByCustomerId(customerId).stream().
-                map(this::convertToCustomerDTO).collect(Collectors.toList());
-        if (customer.isEmpty()){
+    public CustomerDTO getCustomerById(Long customerId) {
+        Customer customer = customerRepository.findByCustomerId(customerId);
+
+        if (customer == null){
             return null;
         }
         else {
-            return customer;
+            return getCustomerDTO(customer);
         }
     }
 
-    /*
-    Entity to DTO conversion
-     */
-    private CustomerDTO convertToCustomerDTO(Customer customer) {
+    private CustomerDTO getCustomerDTO(Customer customer) {
         CustomerDTO customerDTO = new CustomerDTO();
         customerDTO.setCustomerId(customer.getCustomerId());
         customerDTO.setCustomerName(customer.getCustomerName());
@@ -68,6 +64,13 @@ public class CustomerServiceImpl implements CustomerService {
         customerDTO.setCustomerPhone(customer.getCustomerPhone());
         customerDTO.setAccounts(customer.getAccounts());
         return customerDTO;
+    }
+
+    /*
+    Entity to DTO conversion
+     */
+    private CustomerDTO convertToCustomerDTO(Customer customer) {
+        return getCustomerDTO(customer);
     }
 
 

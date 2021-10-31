@@ -22,8 +22,7 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
-    @Autowired
-    private CustomerRepository customerRepository;
+
 
 
     public CustomerController(CustomerService customerService) {
@@ -44,7 +43,7 @@ public class CustomerController {
      */
     @GetMapping("/api/v1/customer/{customerId}")
     @ResponseBody
-    public List<CustomerDTO> getCustomers(@PathVariable Long customerId) {
+    public CustomerDTO getCustomers(@PathVariable Long customerId) {
         return customerService.getCustomerById(customerId);
     }
 
@@ -55,7 +54,7 @@ public class CustomerController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Customer> create(@Valid @RequestBody Customer newCustomer) throws ServerException {
-        Customer customer = customerRepository.save(newCustomer);
+        Customer customer = customerService.save(newCustomer);
         return new ResponseEntity<>(customer, HttpStatus.CREATED);
     }
 }

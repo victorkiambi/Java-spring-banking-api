@@ -27,6 +27,13 @@ public class Customer {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.MERGE)
     private List<Account> accounts = new ArrayList<>();
 
+    public Customer(Long customerId, String customerName, String customerEmail, Integer customerPhone) {
+        this.customerId = customerId;
+        this.customerName = customerName;
+        this.customerEmail = customerEmail;
+        this.customerPhone = customerPhone;
+    }
+
     public void addAccount(Account account) {
         accounts.add(account);
         account.setCustomer(this);
