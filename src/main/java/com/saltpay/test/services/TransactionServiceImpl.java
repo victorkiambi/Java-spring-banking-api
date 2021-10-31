@@ -43,15 +43,8 @@ public class TransactionServiceImpl implements TransactionService{
             double newBalance = minBalance + depositedAmount;
 
             Account account = getAccount(transaction.getSenderAccNo());
-
+            transaction.setTransactionType(TransactionType.DEPOSIT);
             return setBalance(account, newBalance, transaction);
-//            account.setMinBalance(newBalance);
-//
-//            Transaction transaction1 = new Transaction();
-//            transaction1.setTransactionType(TransactionType.DEPOSIT);
-//            transaction1.setTransactionAmount(transaction.getTransactionAmount());
-//            account.addTransaction(transaction);
-//            return accountRepository.save(account);
 
         }
     }
@@ -69,29 +62,31 @@ public class TransactionServiceImpl implements TransactionService{
         }
         else{
 
-
             double senderMinBalance = accounts.get(0).getMinBalance();
             double depositedAmount = newTransaction.getTransactionAmount();
             double newSenderBalance = senderMinBalance - depositedAmount;
             Account account = accountRepository.getAccountByAccNo(newTransaction.getSenderAccNo());
-            Account accounts1 = setBalance(account, newSenderBalance,newTransaction);
+
+            newTransaction.setTransactionType(TransactionType.TRANSFER_OUT);
+            setBalance(account, newSenderBalance, newTransaction);
 
             List<Account> receiverAccount = getActualBalance(newTransaction.getReceiverAccNo());
             double receiverMinBalance = receiverAccount.get(0).getMinBalance();
             double newReceiverBalance = receiverMinBalance + depositedAmount;
 
             Account account1 = getAccount(newTransaction.getReceiverAccNo());
+            newTransaction.setTransactionType(TransactionType.TRANSFER_IN);
             return setBalance(account1,newReceiverBalance, newTransaction);
         }
     }
 
     private Account setBalance(Account account, double newBalance, Transaction newTransaction) {
-        account.setMinBalance(newBalance);
 
+        account.setMinBalance(newBalance);
         Transaction transaction = new Transaction();
-        newTransaction.setTransactionType(TransactionType.DEPOSIT);
-        newTransaction.setTransactionAmount(newTransaction.getTransactionAmount());
-        account.addTransaction(newTransaction);
+        transaction.setTransactionType(newTransaction.getTransactionType());
+        transaction.setTransactionAmount(newTransaction.getTransactionAmount());
+        account.addTransaction(transaction);
         return accountRepository.save(account);
     }
 
@@ -104,8 +99,6 @@ public class TransactionServiceImpl implements TransactionService{
         return accountRepository.getAccountByAccNo(senderAccNo);
     }
 
-//    public List<Account> getActualBalance(accNo){
-//    }
 
     /*
    Entity to DTO cnversion
