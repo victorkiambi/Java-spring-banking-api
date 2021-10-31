@@ -1,19 +1,14 @@
 package com.saltpay.test.Controllers;
 
 import com.saltpay.test.DTO.CustomerDTO;
-import com.saltpay.test.models.Account;
 import com.saltpay.test.models.Customer;
-import com.saltpay.test.repositories.AccountRepository;
-import com.saltpay.test.repositories.CustomerRepository;
 import com.saltpay.test.services.CustomerService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.rmi.ServerException;
 import java.util.List;
 
 @RestController
@@ -50,7 +45,7 @@ public class CustomerController {
     @PostMapping(path = "/api/v1/customers",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Customer> create(@Valid @RequestBody Customer newCustomer) throws ServerException {
+    public ResponseEntity<Customer> create(@Valid @RequestBody Customer newCustomer) {
         Customer customer = customerService.save(newCustomer);
         return new ResponseEntity<>(customer, HttpStatus.CREATED);
     }

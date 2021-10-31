@@ -1,15 +1,14 @@
 package com.saltpay.test.Controllers;
 
+import com.saltpay.test.DTO.AccountTransactionDTO;
 import com.saltpay.test.DTO.TransactionDTO;
 import com.saltpay.test.models.Account;
-import com.saltpay.test.models.Transaction;
 import com.saltpay.test.services.TransactionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.rmi.ServerException;
 import java.util.List;
 
 @RestController
@@ -32,21 +31,28 @@ public class TransactionalController {
     Deposit to own account
     */
     @PostMapping("/api/v1/transaction/deposit")
-    public ResponseEntity<Account> createDeposit(@Valid @RequestBody Transaction newTransaction)  {
-        Account transaction = transactionService.createTransaction(newTransaction);
-        if (transaction == null) {
-            return ResponseEntity.noContent().build();
-        } else {
-
-            return new ResponseEntity<>(transaction, HttpStatus.CREATED);
-        }
+    public ResponseEntity<AccountTransactionDTO> depositToOwnAccount(@Valid @RequestBody Account newAccount)  {
+        AccountTransactionDTO transaction = transactionService.depositToOwnAccount(newAccount);
+        return getAccountTransactionDTO(transaction);
     }
 
     /*
     Transfer to different account
     */
     @PostMapping("/api/v1/transaction/transfer")
-    public Account createTransfer(@Valid @RequestBody Transaction newTransaction) throws ServerException {
-        return transactionService.bankTransfer(newTransaction);
+    public ResponseEntity<AccountTransactionDTO> accountToAccountTransfer(@Valid @RequestBody Account newTransaction) {
+        AccountTransactionDTO transaction = transactionService.accountToAccountTransfer(newTransaction);
+        return getAccountTransactionDTO(transaction);
+    }
+
+    private ResponseEntity<AccountTransactionDTO> getAccountTransactionDTO(AccountTransactionDTO transaction) {
+        if (transaction.getResponse().getResponseCode() == 404) {
+            return new ResponseEntity<>(transaction, HttpStatus.NOT_FOUND);
+        }
+        if(transaction.getResponse().getResponseCode() == 400) {
+            return new ResponseEntity<>(transaction, HttpStatus.BAD_REQUEST);
+        }else {
+            return new ResponseEntity<>(transaction, HttpStatus.CREATED);
+        }
     }
 }

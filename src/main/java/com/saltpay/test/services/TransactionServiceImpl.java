@@ -1,5 +1,7 @@
 package com.saltpay.test.services;
 
+import com.saltpay.test.DTO.AccountTransactionDTO;
+import com.saltpay.test.DTO.ResponseDTO;
 import com.saltpay.test.DTO.TransactionDTO;
 import com.saltpay.test.models.Account;
 import com.saltpay.test.models.Transaction;
@@ -31,63 +33,108 @@ public class TransactionServiceImpl implements TransactionService{
     }
 
     @Override
-    public Account createTransaction(Transaction transaction) {
-        Account accounts = getActualBalance(transaction.getSenderAccNo());
+    public AccountTransactionDTO depositToOwnAccount(Account transaction) {
+        Account accounts = getActualBalance(transaction.getAccNo());
 
         if (accounts == null){
-            return null;
+            ResponseDTO responseDTO = new ResponseDTO();
+            responseDTO.setResponseCode(404);
+            responseDTO.setResponseDescription("Sorry no Account found");
+
+            AccountTransactionDTO accountTransactionDTO = new AccountTransactionDTO();
+            accountTransactionDTO.setResponse(responseDTO);
+            return accountTransactionDTO;
         }
         else{
             double minBalance = accounts.getMinBalance();
             double depositedAmount = transaction.getTransactionAmount();
             double newBalance = minBalance + depositedAmount;
 
-            Account account = getAccount(transaction.getSenderAccNo());
-            transaction.setTransactionType(TransactionType.DEPOSIT);
-            return setBalance(account, newBalance, transaction);
+            Account account = getAccount(transaction.getAccNo());
+            Transaction transaction1 = new Transaction();
+            transaction1.setTransactionType(TransactionType.DEPOSIT);
+            transaction1.setTransactionAmount(depositedAmount);
 
+            ResponseDTO responseDTO = new ResponseDTO();
+            responseDTO.setResponseCode(200);
+            responseDTO.setResponseDescription("Operation completed successfully");
+            return setBalance(account, newBalance, transaction1, responseDTO);
         }
     }
 
 
     @Override
-    public Account bankTransfer(Transaction newTransaction) {
-        Account accounts = getActualBalance(newTransaction.getSenderAccNo());
+    public AccountTransactionDTO accountToAccountTransfer(Account newTransaction) {
+        Account senderAccount = getActualBalance(newTransaction.getAccNo());
+        Account receiverAccount = getActualBalance(newTransaction.getReceiverAccNo());
 
-        if (accounts == null)
-            return null;
+        if ((senderAccount == null) || (receiverAccount == null)  ) {
+            ResponseDTO responseDTO = new ResponseDTO();
+            responseDTO.setResponseCode(404);
+            responseDTO.setResponseDescription("Sorry, no Account found for the Account Number");
 
-        if ((accounts.getMinBalance() == 0) || (accounts.getMinBalance() < newTransaction.getTransactionAmount())){
-            return null;
+            AccountTransactionDTO accountTransactionDTO = new AccountTransactionDTO();
+            accountTransactionDTO.setResponse(responseDTO);
+            return accountTransactionDTO;
+        }
+        if ((senderAccount.getMinBalance() == 0) || (senderAccount.getMinBalance() < newTransaction.getTransactionAmount())){
+            ResponseDTO responseDTO = new ResponseDTO();
+            responseDTO.setResponseCode(400);
+            responseDTO.setResponseDescription("Sorry, you dont have sufficient funds");
+
+            AccountTransactionDTO accountTransactionDTO = new AccountTransactionDTO();
+            accountTransactionDTO.setResponse(responseDTO);
+            return accountTransactionDTO;
         }
         else{
 
-            double senderMinBalance = accounts.getMinBalance();
+            double senderMinBalance = senderAccount.getMinBalance();
             double depositedAmount = newTransaction.getTransactionAmount();
             double newSenderBalance = senderMinBalance - depositedAmount;
-            Account account = accountRepository.getAccountByAccNo(newTransaction.getSenderAccNo());
 
-            newTransaction.setTransactionType(TransactionType.TRANSFER_OUT);
-            setBalance(account, newSenderBalance, newTransaction);
+            Account account = accountRepository.getAccountByAccNo(newTransaction.getAccNo());
+            Transaction senderTransaction = new Transaction();
+            senderTransaction.setTransactionType(TransactionType.TRANSFER_OUT);
 
-            Account receiverAccount = getActualBalance(newTransaction.getReceiverAccNo());
+            ResponseDTO responseDTO = new ResponseDTO();
+            responseDTO.setResponseCode(200);
+            responseDTO.setResponseDescription("Operation completed successfully");
+            setBalance(account, newSenderBalance, senderTransaction, responseDTO);
+
             double receiverMinBalance = receiverAccount.getMinBalance();
             double newReceiverBalance = receiverMinBalance + depositedAmount;
 
             Account account1 = getAccount(newTransaction.getReceiverAccNo());
-            newTransaction.setTransactionType(TransactionType.TRANSFER_IN);
-            return setBalance(account1,newReceiverBalance, newTransaction);
+            Transaction receiverTransaction = new Transaction();
+            receiverTransaction.setTransactionType(TransactionType.TRANSFER_IN);
+            ResponseDTO responseDTO1 = new ResponseDTO();
+            responseDTO1.setResponseCode(200);
+            responseDTO1.setResponseDescription("Operation completed successfully");
+            return setBalance(account1,newReceiverBalance, receiverTransaction, responseDTO1);
         }
     }
 
-    private Account setBalance(Account account, double newBalance, Transaction newTransaction) {
+    private AccountTransactionDTO setBalance(Account account, double newBalance, Transaction newTransaction, ResponseDTO responseDTO) {
 
         account.setMinBalance(newBalance);
         Transaction transaction = new Transaction();
         transaction.setTransactionType(newTransaction.getTransactionType());
         transaction.setTransactionAmount(newTransaction.getTransactionAmount());
         account.addTransaction(transaction);
-        return accountRepository.save(account);
+        Account response = accountRepository.save(account);
+
+        AccountTransactionDTO accountTransactionDTO = new AccountTransactionDTO();
+        accountTransactionDTO.setResponse(responseDTO);
+        accountTransactionDTO.setAccNo(response.getAccNo());
+        accountTransactionDTO.setAccName(response.getAccName());
+        accountTransactionDTO.setAccBranch(response.getAccBranch());
+        accountTransactionDTO.setMinBalance(response.getMinBalance());
+        accountTransactionDTO.setTransactionAmount(newTransaction.getTransactionAmount());
+        accountTransactionDTO.setReceiverAccNo(response.getReceiverAccNo());
+//        accountTransactionDTO.setTransaction(response.getTransactions()
+//                .stream().map(this::convertToTransactionDTO).collect(Collectors.toList()));
+
+        return accountTransactionDTO;
     }
 
 

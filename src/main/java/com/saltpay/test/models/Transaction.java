@@ -29,12 +29,15 @@ public class Transaction {
 //    @Transient
     private transient Long receiverAccNo;
 
-    private transient String transactionDetails;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "acc_No")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Account account;
 
+    public Transaction(Long senderAccNo, double transactionAmount ){
+        this.senderAccNo = senderAccNo;
+        this.transactionAmount = transactionAmount;
+    }
 
 }

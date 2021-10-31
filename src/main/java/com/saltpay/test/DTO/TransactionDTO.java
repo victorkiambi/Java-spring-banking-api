@@ -18,6 +18,7 @@ public class TransactionDTO {
         this.transactionType = transactionType;
     }
 
+
     public TransactionDTO() {
     }
 }

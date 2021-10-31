@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class AccountDTO {
 
+    private ResponseDTO responseDTO;
     private Long accNo;
     private String accName;
     private String accBranch;
@@ -19,23 +20,7 @@ public class AccountDTO {
     private Integer phone;
     private String email;
 
-
-    public AccountDTO(Long accNo, String accName, String accBranch, double minBalance, String name, Integer phone, String email) {
-        this.accNo = accNo;
-        this.accName = accName;
-        this.accBranch = accBranch;
-        this.minBalance = minBalance;
-        this.name = name;
-        this.phone = phone;
-        this.email = email;
-    }
-
-    public AccountDTO(String accName, String accBranch, double minBalance, Customer customer) {
-        this.accName = accName;
-        this.accBranch = accBranch;
-        this.minBalance = minBalance;
-    }
-    //    private List<Transaction> transaction;
+    private List<Transaction> transactions;
 
 
 

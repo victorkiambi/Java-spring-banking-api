@@ -27,6 +27,8 @@ public class Account{
     private String accBranch;
     private double minBalance;
 
+    private transient double transactionAmount;
+    private transient Long receiverAccNo;
 
     @ManyToOne( fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
@@ -42,6 +44,11 @@ public class Account{
         this.accBranch = accBranch;
         this.minBalance = minBalance;
         this.customer = customer;
+    }
+
+    public Account (Long accNo, double transactionAmount) {
+        this.accNo = accNo;
+        this.transactionAmount = transactionAmount;
     }
 
 
