@@ -2,14 +2,15 @@ package com.saltpay.test.DTO;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.saltpay.test.models.Customer;
-import com.saltpay.test.models.Transaction;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
+
+/**
+ *
+ */
 public class AccountDTO {
 
     private Long accNo;

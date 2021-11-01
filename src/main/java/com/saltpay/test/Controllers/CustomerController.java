@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+/**
+ * Handles incoming customer requests
+ * /api/v1/customers
+ * /api/v1/cutomer/{customerId}
+ */
 @RestController
 public class CustomerController {
 
@@ -21,8 +26,9 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    /*
-    Get all customers with account details
+    /**
+     * Get all customers
+     * @return customers with account details
      */
     @GetMapping("/api/v1/customers")
     @ResponseBody
@@ -30,8 +36,11 @@ public class CustomerController {
         return ResponseHandler.generateResponse("Success", HttpStatus.OK, customerService.getAllCustomers());
     }
 
-    /*
-    Get specific customer with customer id
+    /**
+     * Get customer details via cutomer Id
+     *
+     * @param customerId
+     * @return single customer details
      */
     @GetMapping("/api/v1/customer/{customerId}")
     @ResponseBody
@@ -46,8 +55,10 @@ public class CustomerController {
         }
     }
 
-    /*
-    Create new customer
+    /**
+     * Create a customer
+     * @param newCustomer
+     * @return new customer created
      */
     @PostMapping(path = "/api/v1/customers",
             consumes = MediaType.APPLICATION_JSON_VALUE,

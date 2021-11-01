@@ -10,8 +10,17 @@ import java.util.Optional;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
-    @Override
+    /**
+     * Find all customers
+     * @return
+     */
     List<Customer> findAll();
+
+    /**
+     * Find single cutomer via customer id
+     * @param customerId
+     * @return
+     */
 
     Customer findByCustomerId(Long customerId);
 

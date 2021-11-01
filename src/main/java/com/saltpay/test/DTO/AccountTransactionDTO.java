@@ -18,7 +18,6 @@ public class AccountTransactionDTO {
     private transient double transactionAmount;
     private transient Long receiverAccNo;
 
-    private String transactionDetails;
 
 
     public AccountTransactionDTO (Long accNo, double transactionAmount) {
@@ -31,7 +30,4 @@ public class AccountTransactionDTO {
         this.receiverAccNo = receiverAccNo;
     }
 
-
-
-//    private List<TransactionDTO> transaction;
 }

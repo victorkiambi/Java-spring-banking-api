@@ -13,16 +13,30 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * Handles incoming transaction requests
+ * /api/v1/transactions/{accNo}
+ * /api/v1/transaction/deposit
+ * /api/v1/transaction/transfer
+ */
 @RestController
 public class TransactionalController {
 
+
     private final TransactionService transactionService;
+
+    /**
+     *
+     * @param transactionService
+     */
     public TransactionalController(TransactionService transactionService) {
         this.transactionService = transactionService;
     }
 
-    /*
-    Get Transaction Details via accountId
+    /**
+     * Get all transactions for single account via Account No.
+     * @param accNo
+     * @return transactions
      */
     @GetMapping("/api/v1/transactions/{accNo}")
     public HttpEntity<? extends Object> getTransactions(@PathVariable Long accNo) {
@@ -35,31 +49,39 @@ public class TransactionalController {
         }
     }
 
-    /*
-    Deposit to own account
-    */
+    /**
+     * Handles deposit to own account
+     * @param newAccount
+     * @return new account balance
+     */
     @PostMapping("/api/v1/transaction/deposit")
     public ResponseEntity<Object> depositToOwnAccount(@Valid @RequestBody Account newAccount)  {
         AccountTransactionDTO transaction = transactionService.depositToOwnAccount(newAccount);
         return getAccountTransactionDTO(transaction);
     }
 
-    /*
-    Transfer to different account
-    */
+    /**
+     * Handles account to account transfer
+     * @param newTransaction
+     * @return successful transaction details
+     */
     @PostMapping("/api/v1/transaction/transfer")
     public ResponseEntity<Object> accountToAccountTransfer(@Valid @RequestBody Account newTransaction) {
         AccountTransactionDTO transaction = transactionService.accountToAccountTransfer(newTransaction);
         return getAccountTransactionDTO(transaction);
     }
 
+    /**
+     * method to handle responses
+     * @param transaction
+     * @return
+     */
+
     private ResponseEntity<Object> getAccountTransactionDTO(AccountTransactionDTO transaction) {
         if (transaction == null) {
             return ResponseHandler.generateResponse("No account found", HttpStatus.NOT_FOUND, null);
         }
-//        if(transaction.getTransactionDetails().equals("Insufficient funds")) {
-//            return ResponseHandler.generateResponse("Sender has insufficient funds for this request", HttpStatus.BAD_REQUEST,null);
-//        }
+
         else {
             return ResponseHandler.generateResponse("Success", HttpStatus.CREATED,transaction);
         }

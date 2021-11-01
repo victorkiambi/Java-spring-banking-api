@@ -19,10 +19,12 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerServiceImpl(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
-    /*
-    Get all customers with their account details
-     */
 
+    /**
+     * Get all cutomers with account details
+     * convert Customer entity to CustomerDTO
+     * @return all customers with account details
+     */
     @Override
     public List<CustomerDTO> getAllCustomers() {
 
@@ -32,17 +34,20 @@ public class CustomerServiceImpl implements CustomerService {
                 collect(Collectors.toList());
     }
 
-    /*
-    Create new Customer
+    /**
+     * Creates new customer details
+     * @param customer
+     * @return newly created customer details
      */
     @Override
-    @Transactional
     public Customer save(Customer customer) {
         return customerRepository.save(customer);
     }
 
-    /*
-    Get customer via Id
+    /**
+     * Retrieves customer via customerId
+     * @param customerId
+     * @return single customer details
      */
     @Override
     public CustomerDTO getCustomerById(Long customerId) {
@@ -56,6 +61,12 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
+    /**
+     * Converts customer entity to CustomerDTO
+     * @param customer
+     * @return CustomerDTO
+     */
+
     private CustomerDTO getCustomerDTO(Customer customer) {
         CustomerDTO customerDTO = new CustomerDTO();
         customerDTO.setCustomerId(customer.getCustomerId());
@@ -66,8 +77,8 @@ public class CustomerServiceImpl implements CustomerService {
         return customerDTO;
     }
 
-    /*
-    Entity to DTO conversion
+    /**
+     * Entity to DTO conversion
      */
     private CustomerDTO convertToCustomerDTO(Customer customer) {
         return getCustomerDTO(customer);

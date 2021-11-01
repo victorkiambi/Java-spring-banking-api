@@ -2,7 +2,6 @@ package com.saltpay.test.integration;
 
 import com.saltpay.test.Controllers.AccountController;
 import com.saltpay.test.DTO.AccountDTO;
-import com.saltpay.test.models.Account;
 import com.saltpay.test.models.Customer;
 import com.saltpay.test.services.AccountService;
 import org.hamcrest.Matchers;
@@ -20,16 +19,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * Tests for Account requests
+ */
 @WebMvcTest(AccountController.class)
 @ContextConfiguration()
 
@@ -51,6 +47,10 @@ public class AccountControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
+    /**
+     * Test new account creation
+     * @throws Exception
+     */
     @Test
     public void testCreateAccount() throws Exception{
         AccountDTO account = new AccountDTO("Savings", "Nairobi", 1000, new Customer(1L));

@@ -9,6 +9,7 @@ import com.saltpay.test.repositories.AccountRepository;
 import com.saltpay.test.repositories.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,29 +23,43 @@ public class TransactionServiceImpl implements TransactionService{
     @Autowired
     public AccountRepository accountRepository;
 
+    /**
+     * Retrieves all transactions based on account no.
+     * @param accNo
+     * @return all transactions history
+     */
     @Override
     public List<TransactionDTO> findTransactionsByAccount(Long accNo) {
 
         List<Transaction> transactionDTOS = transactionRepository.findTransactionByAccount_AccNo(accNo);
+
+        //check if account exists
         if (transactionDTOS == null) {
             return null;
         }
+
         else{
             return transactionDTOS.
                     stream().
                     map(this::convertToTransactionDTO).collect(Collectors.toList());
-
+        }
     }
-    }
 
+    /**
+     * Handles deposits to own personal account
+     * @param transaction
+     * @return new account balance details
+     */
     @Override
     public AccountTransactionDTO depositToOwnAccount(Account transaction) {
         Account accounts = getActualBalance(transaction.getAccNo());
 
+        //check if account exists
         if (accounts == null){
             return null;
         }
         else{
+            //add new amount to minimum balance
             double minBalance = accounts.getMinBalance();
             double depositedAmount = transaction.getTransactionAmount();
             double newBalance = minBalance + depositedAmount;
@@ -58,20 +73,26 @@ public class TransactionServiceImpl implements TransactionService{
         }
     }
 
-
+    /**
+     * Handles account to account transfer i.e customer to customer
+     * @param newTransaction
+     * @return new account balance details
+     */
     @Override
     public AccountTransactionDTO accountToAccountTransfer(Account newTransaction) {
         Account senderAccount = getActualBalance(newTransaction.getAccNo());
         Account receiverAccount = getActualBalance(newTransaction.getReceiverAccNo());
 
+        //check if both sender and receiver accounts exist
         if ((senderAccount == null) || (receiverAccount == null)  ) {
           return null;
         }
+        //check if sender account is 0 or less than amount to be withdrawn
         if ((senderAccount.getMinBalance() == 0) || (senderAccount.getMinBalance() < newTransaction.getTransactionAmount())){
            return null;
         }
         else{
-
+            //subtract amount from sender
             double senderMinBalance = senderAccount.getMinBalance();
             double depositedAmount = newTransaction.getTransactionAmount();
             double newSenderBalance = senderMinBalance - depositedAmount;
@@ -79,10 +100,14 @@ public class TransactionServiceImpl implements TransactionService{
             Account account = accountRepository.getAccountByAccNo(newTransaction.getAccNo());
             Transaction senderTransaction = new Transaction();
             senderTransaction.setTransactionType(TransactionType.TRANSFER_OUT);
+            senderTransaction.setTransactionAmount(newTransaction.getTransactionAmount());
+            senderTransaction.setReceiverAccNo(newTransaction.getReceiverAccNo());
 
 
-            setBalance(account, newSenderBalance, senderTransaction);
+            //update new balance
+            AccountTransactionDTO senAccount = setBalance(account, newSenderBalance, senderTransaction);
 
+            //add subtracted amount to receiver
             double receiverMinBalance = receiverAccount.getMinBalance();
             double newReceiverBalance = receiverMinBalance + depositedAmount;
 
@@ -90,10 +115,21 @@ public class TransactionServiceImpl implements TransactionService{
             Transaction receiverTransaction = new Transaction();
             receiverTransaction.setTransactionType(TransactionType.TRANSFER_IN);
 
-            return setBalance(account1,newReceiverBalance, receiverTransaction);
+            //update receiver balance
+            setBalance(account1,newReceiverBalance, receiverTransaction);
+
+            return senAccount;
+
         }
     }
 
+    /**
+     * Converts Account and Transaction entities to AccountTransactionDTO
+     * @param account
+     * @param newBalance
+     * @param newTransaction
+     * @return
+     */
     private AccountTransactionDTO setBalance(Account account, double newBalance, Transaction newTransaction) {
 
         account.setMinBalance(newBalance);
@@ -109,25 +145,33 @@ public class TransactionServiceImpl implements TransactionService{
         accountTransactionDTO.setAccBranch(response.getAccBranch());
         accountTransactionDTO.setMinBalance(response.getMinBalance());
         accountTransactionDTO.setTransactionAmount(newTransaction.getTransactionAmount());
-        accountTransactionDTO.setReceiverAccNo(response.getReceiverAccNo());
-//        accountTransactionDTO.setTransaction(response.getTransactions()
-//                .stream().map(this::convertToTransactionDTO).collect(Collectors.toList()));
+        accountTransactionDTO.setReceiverAccNo(newTransaction.getReceiverAccNo());
 
         return accountTransactionDTO;
     }
 
 
-    private Account getActualBalance(Long senderAccNo) {
-        return accountRepository.findByAccNo(senderAccNo);
+    /**
+     * Retrieves sender/receiver account balance
+     * @param accNo
+     * @return
+     */
+    private Account getActualBalance(Long accNo) {
+        return accountRepository.findByAccNo(accNo);
     }
 
-    private Account getAccount(Long senderAccNo) {
-        return accountRepository.getAccountByAccNo(senderAccNo);
+    /**
+     * Retrieves sender/receiver account details
+     * @param accNo
+     * @return
+     */
+    private Account getAccount(Long accNo) {
+        return accountRepository.getAccountByAccNo(accNo);
     }
 
 
-    /*
-   Entity to DTO cnversion
+    /**
+    * Transaction Entity to DTO cnversion
     */
     private TransactionDTO convertToTransactionDTO(Transaction transaction) {
         TransactionDTO transactionDTO = new TransactionDTO();

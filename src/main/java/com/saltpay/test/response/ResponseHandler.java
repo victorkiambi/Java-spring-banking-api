@@ -6,7 +6,17 @@ import org.springframework.http.ResponseEntity;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ *
+ */
 public class ResponseHandler {
+    /**
+     * Generates response messages, status and response object
+     * @param message
+     * @param status
+     * @param responseObj
+     * @return
+     */
     public static ResponseEntity<Object> generateResponse(String message, HttpStatus status, Object responseObj) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("message", message);

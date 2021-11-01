@@ -26,9 +26,7 @@ public class Account{
     private String accBranch;
     private double minBalance;
 
-    @JsonIgnore
     private transient double transactionAmount;
-    @JsonIgnore
     private transient Long receiverAccNo;
 
     @ManyToOne( fetch = FetchType.LAZY)

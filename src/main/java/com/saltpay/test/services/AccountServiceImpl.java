@@ -27,10 +27,10 @@ public class AccountServiceImpl implements AccountService {
         this.accountRepository = accountRepository;
     }
 
-    /*
-    Create new account for customer
-
-    Check if customer exists first
+    /**
+     * Creates new account
+     * @param account
+     * @return AccountDTO
      */
     @Override
     public AccountDTO saveAccount(Account account) {
@@ -48,7 +48,7 @@ public class AccountServiceImpl implements AccountService {
             account1.setAccBranch(account.getAccBranch());
             account1.setMinBalance(account.getMinBalance());
 
-            //Update minBalance as transaction
+            //Update minBalance as a transaction
             Transaction transaction = new Transaction();
             transaction.setTransactionAmount(account1.getMinBalance());
             transaction.setTransactionType(TransactionType.DEPOSIT);
@@ -56,6 +56,7 @@ public class AccountServiceImpl implements AccountService {
             account1.addTransaction(transaction);
             Account response = accountRepository.save(account1);
 
+            //Return DTO
             AccountDTO accountDTO = new AccountDTO();
             accountDTO.setAccNo(response.getAccNo());
             accountDTO.setAccName(response.getAccName());
@@ -71,8 +72,10 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
-    /*
-    Get Account via account Id
+    /**
+     * Get single account details
+     * @param id
+     * @return AccountDTO
      */
     @Override
     public AccountDTO getAccount(Long id) {
@@ -90,6 +93,13 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
+    /**
+     * Converts Account entity to AccountDTO
+     * @param account
+     * @param accountDTO
+     * @param customer
+     * @return AccountDTO
+     */
     private AccountDTO getAccountDTO(Account account, AccountDTO accountDTO, Customer customer) {
         accountDTO.setAccNo(account.getAccNo());
         accountDTO.setAccName(account.getAccName());
@@ -102,12 +112,4 @@ public class AccountServiceImpl implements AccountService {
         return accountDTO;
     }
 
-    /*
-    Entity to DTO cnversion
-     */
-    private AccountDTO convertToAccountDTO(Account account) {
-        Customer customer = account.getCustomer();
-        AccountDTO accountDTO = new AccountDTO();
-        return getAccountDTO(account, accountDTO, customer);
-    }
 }

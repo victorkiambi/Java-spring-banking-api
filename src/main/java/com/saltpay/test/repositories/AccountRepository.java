@@ -9,7 +9,18 @@ import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
+    /**
+     * Find account by account number
+     * @param id
+     * @return
+     */
     Account findByAccNo(Long id);
+
+    /**
+     * Get account by account number
+     * @param id
+     * @return
+     */
 
     Account getAccountByAccNo(Long id);
 }

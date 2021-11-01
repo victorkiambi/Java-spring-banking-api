@@ -24,8 +24,10 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    /*
-    Get Account Details via accountId
+    /**
+     * Retrieves account via Account Number
+     * @param accNo
+     * @return single account details
      */
     @GetMapping("/api/v1/accounts/{accNo}")
     public ResponseEntity<Object> getAccount(@PathVariable Long accNo){
@@ -36,8 +38,11 @@ public class AccountController {
         return ResponseHandler.generateResponse("Success", HttpStatus.OK,accountDTO);
     }
 
-    /*
-    Create new account
+    /**
+     * Creates a new customer account
+     * Customer can have multiple accounts
+     * @param newAccount
+     * @return newly created account
      */
     @PostMapping("/api/v1/accounts")
     public ResponseEntity<Object> create(@Valid @RequestBody Account newAccount) {

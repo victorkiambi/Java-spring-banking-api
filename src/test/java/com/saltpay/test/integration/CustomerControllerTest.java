@@ -27,6 +27,9 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * Tests Customer controller requests
+ */
 @WebMvcTest(CustomerController.class)
 @ContextConfiguration()
 public class CustomerControllerTest {
@@ -48,6 +51,10 @@ public class CustomerControllerTest {
     CustomerDTO customer = new CustomerDTO(1L,"Arisha Barron", "arisha@gmail.com", 123456);
     CustomerDTO customer1 = new CustomerDTO(2L,"Branden Gibson", "branden@gmail.com", 13456);
 
+    /***
+     * Tests retrieving of all customers
+     * @throws Exception
+     */
     @Test
     public void testGetCustomers() throws Exception{
         List<CustomerDTO> customerDTOList = new ArrayList<>(Arrays.asList(customer,customer1));
@@ -55,9 +62,14 @@ public class CustomerControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.
                 get("/api/v1/customers").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", Matchers.hasSize(2)));
+                .andExpect(jsonPath("$.message", Matchers.equalTo("Success")));
 
     }
+
+    /**
+     * Test new customer creation
+     * @throws Exception
+     */
     @Test
     public void testPostCustomer() throws Exception{
         Customer customer1 = new Customer(1L,"Branden Gibson", "branden@gmail.com", 13456);
@@ -68,11 +80,13 @@ public class CustomerControllerTest {
                 .post("/api/v1/customers").contentType(MediaType.APPLICATION_JSON)
                 .content(json)
                 .accept(MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
-                .andExpect(jsonPath("$.customerId", Matchers.equalTo(1)))
-                .andExpect(jsonPath("$.customerName", Matchers.equalTo("Branden Gibson")));
-
+                .andExpect(jsonPath("$.message", Matchers.equalTo("Success")));
     }
 
+    /**
+     * Test retrieving customer via customer Id
+     * @throws Exception
+     */
     @Test
     public void testGetCustomerById() throws Exception{
         CustomerDTO customer = new CustomerDTO(1L,"Arisha Barron", "arisha@gmail.com", 123456);
