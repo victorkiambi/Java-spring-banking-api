@@ -1,5 +1,6 @@
 package com.saltpay.test.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,10 +24,10 @@ public class Transaction {
     private double transactionAmount;
     private TransactionType transactionType;
 
-//    @Transient
+    @JsonIgnore
     private transient Long senderAccNo;
 
-//    @Transient
+    @JsonIgnore
     private transient Long receiverAccNo;
 
 

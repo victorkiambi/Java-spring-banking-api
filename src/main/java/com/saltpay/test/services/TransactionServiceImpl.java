@@ -1,7 +1,6 @@
 package com.saltpay.test.services;
 
 import com.saltpay.test.DTO.AccountTransactionDTO;
-import com.saltpay.test.DTO.ResponseDTO;
 import com.saltpay.test.DTO.TransactionDTO;
 import com.saltpay.test.models.Account;
 import com.saltpay.test.models.Transaction;
@@ -27,9 +26,15 @@ public class TransactionServiceImpl implements TransactionService{
     public List<TransactionDTO> findTransactionsByAccount(Long accNo) {
 
         List<Transaction> transactionDTOS = transactionRepository.findTransactionByAccount_AccNo(accNo);
-        return transactionDTOS.
-                stream().
-                map(this::convertToTransactionDTO).collect(Collectors.toList());
+        if (transactionDTOS == null) {
+            return null;
+        }
+        else{
+            return transactionDTOS.
+                    stream().
+                    map(this::convertToTransactionDTO).collect(Collectors.toList());
+
+    }
     }
 
     @Override
@@ -58,7 +63,7 @@ public class TransactionServiceImpl implements TransactionService{
             ResponseDTO responseDTO = new ResponseDTO();
             responseDTO.setResponseCode(200);
             responseDTO.setResponseDescription("Operation completed successfully");
-            return setBalance(account, newBalance, transaction1, responseDTO);
+            return setBalance(account, newBalance, transaction1);
         }
     }
 
@@ -69,22 +74,10 @@ public class TransactionServiceImpl implements TransactionService{
         Account receiverAccount = getActualBalance(newTransaction.getReceiverAccNo());
 
         if ((senderAccount == null) || (receiverAccount == null)  ) {
-            ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setResponseCode(404);
-            responseDTO.setResponseDescription("Sorry, no Account found for the Account Number");
-
-            AccountTransactionDTO accountTransactionDTO = new AccountTransactionDTO();
-            accountTransactionDTO.setResponse(responseDTO);
-            return accountTransactionDTO;
+          return null;
         }
         if ((senderAccount.getMinBalance() == 0) || (senderAccount.getMinBalance() < newTransaction.getTransactionAmount())){
-            ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setResponseCode(400);
-            responseDTO.setResponseDescription("Sorry, you dont have sufficient funds");
-
-            AccountTransactionDTO accountTransactionDTO = new AccountTransactionDTO();
-            accountTransactionDTO.setResponse(responseDTO);
-            return accountTransactionDTO;
+           return null;
         }
         else{
 
@@ -96,10 +89,8 @@ public class TransactionServiceImpl implements TransactionService{
             Transaction senderTransaction = new Transaction();
             senderTransaction.setTransactionType(TransactionType.TRANSFER_OUT);
 
-            ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setResponseCode(200);
-            responseDTO.setResponseDescription("Operation completed successfully");
-            setBalance(account, newSenderBalance, senderTransaction, responseDTO);
+
+            setBalance(account, newSenderBalance, senderTransaction);
 
             double receiverMinBalance = receiverAccount.getMinBalance();
             double newReceiverBalance = receiverMinBalance + depositedAmount;
@@ -107,14 +98,12 @@ public class TransactionServiceImpl implements TransactionService{
             Account account1 = getAccount(newTransaction.getReceiverAccNo());
             Transaction receiverTransaction = new Transaction();
             receiverTransaction.setTransactionType(TransactionType.TRANSFER_IN);
-            ResponseDTO responseDTO1 = new ResponseDTO();
-            responseDTO1.setResponseCode(200);
-            responseDTO1.setResponseDescription("Operation completed successfully");
-            return setBalance(account1,newReceiverBalance, receiverTransaction, responseDTO1);
+
+            return setBalance(account1,newReceiverBalance, receiverTransaction);
         }
     }
 
-    private AccountTransactionDTO setBalance(Account account, double newBalance, Transaction newTransaction, ResponseDTO responseDTO) {
+    private AccountTransactionDTO setBalance(Account account, double newBalance, Transaction newTransaction) {
 
         account.setMinBalance(newBalance);
         Transaction transaction = new Transaction();
@@ -124,7 +113,6 @@ public class TransactionServiceImpl implements TransactionService{
         Account response = accountRepository.save(account);
 
         AccountTransactionDTO accountTransactionDTO = new AccountTransactionDTO();
-        accountTransactionDTO.setResponse(responseDTO);
         accountTransactionDTO.setAccNo(response.getAccNo());
         accountTransactionDTO.setAccName(response.getAccName());
         accountTransactionDTO.setAccBranch(response.getAccBranch());

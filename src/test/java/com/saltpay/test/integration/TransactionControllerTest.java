@@ -57,7 +57,7 @@ public class TransactionControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", notNullValue()))
-                .andExpect(jsonPath("$[0].transactionType", Matchers.equalTo("DEPOSIT")));
+                .andExpect(jsonPath("$.message", Matchers.equalTo("Success")));
     }
     @Test
     public void testDepositToOwnAccount() throws  Exception{
@@ -69,7 +69,7 @@ public class TransactionControllerTest {
                 .post("/api/v1/transaction/deposit").contentType(MediaType.APPLICATION_JSON)
                 .content(json)
                 .accept(MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
-                .andExpect(jsonPath("$.transactionAmount", Matchers.equalTo(500.0)))
+                .andExpect(jsonPath("$.message", Matchers.equalTo("Success")))
         ;
 
     }

@@ -75,14 +75,16 @@ public class CustomerControllerTest {
 
     @Test
     public void testGetCustomerById() throws Exception{
-        Mockito.when(customerService.getCustomerById(customer.getCustomerId())).thenReturn(customer);
+        CustomerDTO customer = new CustomerDTO(1L,"Arisha Barron", "arisha@gmail.com", 123456);
+
+        Mockito.when(customerService.getCustomerById(1L)).thenReturn(customer);
 
         mockMvc.perform(MockMvcRequestBuilders
-                .get("/api/v1/customer/"+ customer.getCustomerId())
+                .get("/api/v1/customer/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", notNullValue()))
-                .andExpect(jsonPath("$.customerName", Matchers.equalTo("Arisha Barron")));
+                .andExpect(jsonPath("$.data.customerName", Matchers.equalTo("Arisha Barron")));
     }
 
 }

@@ -1,6 +1,5 @@
 package com.saltpay.test.DTO;
 
-import com.saltpay.test.models.Account;
 import com.saltpay.test.models.TransactionType;
 import lombok.Data;
 

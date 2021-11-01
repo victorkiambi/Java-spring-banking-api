@@ -1,17 +1,14 @@
 package com.saltpay.test.DTO;
 
-import com.saltpay.test.models.Transaction;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Transient;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 public class AccountTransactionDTO {
 
-    private ResponseDTO response;
     private Long accNo;
     private String accName;
     private String accBranch;
@@ -20,6 +17,8 @@ public class AccountTransactionDTO {
     @Transient
     private transient double transactionAmount;
     private transient Long receiverAccNo;
+
+    private String transactionDetails;
 
 
     public AccountTransactionDTO (Long accNo, double transactionAmount) {

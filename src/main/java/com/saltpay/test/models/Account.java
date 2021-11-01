@@ -1,5 +1,6 @@
 package com.saltpay.test.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,9 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.DoubleStream;
 
 @Data
 @Entity
@@ -27,7 +26,9 @@ public class Account{
     private String accBranch;
     private double minBalance;
 
+    @JsonIgnore
     private transient double transactionAmount;
+    @JsonIgnore
     private transient Long receiverAccNo;
 
     @ManyToOne( fetch = FetchType.LAZY)
@@ -36,22 +37,14 @@ public class Account{
     private Customer customer;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Transaction> transactions = new ArrayList<>();
 
-
-    public Account(String accName, String accBranch, double minBalance, Customer customer) {
-        this.accName = accName;
-        this.accBranch = accBranch;
-        this.minBalance = minBalance;
-        this.customer = customer;
-    }
 
     public Account (Long accNo, double transactionAmount) {
         this.accNo = accNo;
         this.transactionAmount = transactionAmount;
     }
-
-
 
 
     public void addTransaction(Transaction transaction){

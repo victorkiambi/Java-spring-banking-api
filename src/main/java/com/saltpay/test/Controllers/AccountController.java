@@ -2,14 +2,13 @@ package com.saltpay.test.Controllers;
 
 import com.saltpay.test.DTO.AccountDTO;
 import com.saltpay.test.models.Account;
+import com.saltpay.test.response.ResponseHandler;
 import com.saltpay.test.services.AccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.rmi.ServerException;
-import java.util.List;
 
 @RestController
 public class AccountController {
@@ -24,22 +23,24 @@ public class AccountController {
     Get Account Details via accountId
      */
     @GetMapping("/api/v1/accounts/{accNo}")
-    public AccountDTO getAccount(@PathVariable Long accNo){
-        return accountService.getAccount(accNo);
-
+    public ResponseEntity<Object> getAccount(@PathVariable Long accNo){
+        AccountDTO accountDTO = accountService.getAccount(accNo);
+        if (accountDTO == null){
+            return ResponseHandler.generateResponse("No account found for the account number", HttpStatus.NOT_FOUND,null);
+        }
+        return ResponseHandler.generateResponse("Success", HttpStatus.OK,accountDTO);
     }
 
     /*
-    Create new account details
+    Create new account
      */
     @PostMapping("/api/v1/accounts")
-    public ResponseEntity<Account> create(@Valid @RequestBody Account newAccount) {
-        Account account = accountService.saveAccount(newAccount);
+    public ResponseEntity<Object> create(@Valid @RequestBody Account newAccount) {
+        AccountDTO account = accountService.saveAccount(newAccount);
         if (account == null) {
-            return ResponseEntity.noContent().build();
+            return ResponseHandler.generateResponse("No Customer found for given Customer Id", HttpStatus.NOT_FOUND,404);
         } else {
-
-            return new ResponseEntity<>(account, HttpStatus.CREATED);
+            return ResponseHandler.generateResponse("Success", HttpStatus.CREATED, account);
         }
     }
 }

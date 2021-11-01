@@ -49,7 +49,7 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerRepository.findByCustomerId(customerId);
 
         if (customer == null){
-            return null;
+            return  null;
         }
         else {
             return getCustomerDTO(customer);

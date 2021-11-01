@@ -1,5 +1,6 @@
 package com.saltpay.test.DTO;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.saltpay.test.models.Customer;
 import com.saltpay.test.models.Transaction;
 import lombok.Data;
@@ -11,7 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 public class AccountDTO {
 
-    private ResponseDTO responseDTO;
     private Long accNo;
     private String accName;
     private String accBranch;
@@ -20,8 +20,14 @@ public class AccountDTO {
     private Integer phone;
     private String email;
 
-    private List<Transaction> transactions;
+    @JsonIgnore
+    private Customer customer;
 
-
+    public AccountDTO(String accName, String accBranch, double minBalance, Customer customer) {
+        this.accName = accName;
+        this.accBranch = accBranch;
+        this.minBalance = minBalance;
+        this.customer = customer;
+    }
 
 }

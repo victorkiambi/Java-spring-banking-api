@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -52,7 +53,7 @@ public class AccountControllerTest {
 
     @Test
     public void testCreateAccount() throws Exception{
-        Account account = new Account("Savings", "Nairobi", 1000, new Customer(1L));
+        AccountDTO account = new AccountDTO("Savings", "Nairobi", 1000, new Customer(1L));
         Mockito.when(accountService.saveAccount(ArgumentMatchers.any()))
                 .thenReturn(account);
         String json = "{\"accName\":\"Savings\",\"accBranch\":\"Nairobi\",\"minBalance\":1000,\"customer\":{\"customerId\":1}}";
@@ -61,6 +62,7 @@ public class AccountControllerTest {
                 .content(json)
                 .accept(MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
                 .andExpect(jsonPath("$", notNullValue()))
+                .andExpect(jsonPath("$.message", Matchers.equalTo("Success")))
 
         ;
     }

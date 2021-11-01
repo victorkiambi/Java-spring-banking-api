@@ -2,6 +2,7 @@ package com.saltpay.test.Controllers;
 
 import com.saltpay.test.DTO.CustomerDTO;
 import com.saltpay.test.models.Customer;
+import com.saltpay.test.response.ResponseHandler;
 import com.saltpay.test.services.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -9,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 public class CustomerController {
@@ -26,8 +26,8 @@ public class CustomerController {
      */
     @GetMapping("/api/v1/customers")
     @ResponseBody
-    public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
-        return new ResponseEntity<>(customerService.getAllCustomers(), HttpStatus.OK);
+    public ResponseEntity<Object> getAllCustomers() {
+        return ResponseHandler.generateResponse("Success", HttpStatus.OK, customerService.getAllCustomers());
     }
 
     /*
@@ -35,18 +35,25 @@ public class CustomerController {
      */
     @GetMapping("/api/v1/customer/{customerId}")
     @ResponseBody
-    public CustomerDTO getCustomers(@PathVariable Long customerId) {
-        return customerService.getCustomerById(customerId);
+    public ResponseEntity<Object> getCustomers(@PathVariable Long customerId) {
+        CustomerDTO customerDTO = customerService.getCustomerById(customerId);
+        if (customerDTO == null){
+            return ResponseHandler.generateResponse("No Customer Found", HttpStatus.NOT_FOUND, null );
+        }
+        else {
+            return ResponseHandler.generateResponse("Success", HttpStatus.OK, customerDTO );
+
+        }
     }
 
     /*
-    Create customer
+    Create new customer
      */
     @PostMapping(path = "/api/v1/customers",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Customer> create(@Valid @RequestBody Customer newCustomer) {
+    public ResponseEntity<Object> create(@Valid @RequestBody Customer newCustomer) {
         Customer customer = customerService.save(newCustomer);
-        return new ResponseEntity<>(customer, HttpStatus.CREATED);
+        return ResponseHandler.generateResponse("Success", HttpStatus.CREATED, customer);
     }
 }

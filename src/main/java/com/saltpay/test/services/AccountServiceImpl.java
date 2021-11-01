@@ -11,9 +11,6 @@ import com.saltpay.test.repositories.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 public class AccountServiceImpl implements AccountService {
 
@@ -36,7 +33,7 @@ public class AccountServiceImpl implements AccountService {
     Check if customer exists first
      */
     @Override
-    public Account saveAccount(Account account) {
+    public AccountDTO saveAccount(Account account) {
 
         //check if customer exists
         Customer customer = customerRepository.findByCustomerId(account.getCustomer().getCustomerId());
@@ -44,7 +41,6 @@ public class AccountServiceImpl implements AccountService {
             return null;
         }
         else{
-
             //Set account details
             Account account1 = new Account();
             account1.setCustomer(account.getCustomer());
@@ -58,7 +54,19 @@ public class AccountServiceImpl implements AccountService {
             transaction.setTransactionType(TransactionType.DEPOSIT);
 
             account1.addTransaction(transaction);
-            return accountRepository.save(account1);
+            Account response = accountRepository.save(account1);
+
+            AccountDTO accountDTO = new AccountDTO();
+            accountDTO.setAccNo(response.getAccNo());
+            accountDTO.setAccName(response.getAccName());
+            accountDTO.setMinBalance(response.getMinBalance());
+            accountDTO.setAccBranch(response.getAccBranch());
+
+            accountDTO.setName(customer.getCustomerName());
+            accountDTO.setEmail(customer.getCustomerEmail());
+            accountDTO.setPhone(customer.getCustomerPhone());
+
+            return accountDTO;
 
         }
     }
