@@ -75,7 +75,14 @@ public class TransactionControllerTest {
     }
     @Test
     public void testAccountToAccountTransfer() throws Exception{
-        AccountTransactionDTO transactionDTO = new AccountTransactionDTO(1000L,250,1001L);
-
+        AccountTransactionDTO transactionDTO = new AccountTransactionDTO(1000L,250,1101L);
+        Mockito.when(transactionService.accountToAccountTransfer(ArgumentMatchers.any()))
+                .thenReturn(transactionDTO);
+        String json = "{\"accNo\":1000,\"receiverAccNo\":1101,\"transactionAmount\":490}";
+        mockMvc.perform(MockMvcRequestBuilders
+                .post("/api/v1/transaction/transfer").contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
+                .andExpect(jsonPath("$.message", Matchers.equalTo("Success")));
     }
 }

@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+/**
+ * Handles incoming account requests
+ * /api/v1/accounts
+ */
+
 @RestController
 public class AccountController {
 

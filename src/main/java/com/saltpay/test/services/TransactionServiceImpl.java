@@ -42,13 +42,7 @@ public class TransactionServiceImpl implements TransactionService{
         Account accounts = getActualBalance(transaction.getAccNo());
 
         if (accounts == null){
-            ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setResponseCode(404);
-            responseDTO.setResponseDescription("Sorry no Account found");
-
-            AccountTransactionDTO accountTransactionDTO = new AccountTransactionDTO();
-            accountTransactionDTO.setResponse(responseDTO);
-            return accountTransactionDTO;
+            return null;
         }
         else{
             double minBalance = accounts.getMinBalance();
@@ -60,9 +54,6 @@ public class TransactionServiceImpl implements TransactionService{
             transaction1.setTransactionType(TransactionType.DEPOSIT);
             transaction1.setTransactionAmount(depositedAmount);
 
-            ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setResponseCode(200);
-            responseDTO.setResponseDescription("Operation completed successfully");
             return setBalance(account, newBalance, transaction1);
         }
     }

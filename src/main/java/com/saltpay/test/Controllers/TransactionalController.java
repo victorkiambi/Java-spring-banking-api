@@ -28,10 +28,10 @@ public class TransactionalController {
     public HttpEntity<? extends Object> getTransactions(@PathVariable Long accNo) {
         List<TransactionDTO> transactionDTO = transactionService.findTransactionsByAccount(accNo);
         if (transactionDTO == null) {
-            return ResponseHandler.generateResponse("No account found for the Account Number", HttpStatus.NOT_FOUND, 404);
+            return ResponseHandler.generateResponse("No account found for the Account Number", HttpStatus.NOT_FOUND, null);
         }
         else {
-            return ResponseHandler.generateResponse("Success", HttpStatus.OK,200);
+            return ResponseHandler.generateResponse("Success", HttpStatus.OK,transactionDTO);
         }
     }
 
