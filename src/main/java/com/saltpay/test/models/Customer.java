@@ -19,13 +19,10 @@ public class Customer {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long customerId;
 
-    @NotEmpty
     private String customerName;
 
-    @NotEmpty
     private String customerEmail;
 
-    @NotEmpty
     private Integer customerPhone;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.MERGE)
