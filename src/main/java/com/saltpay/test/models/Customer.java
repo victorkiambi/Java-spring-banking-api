@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,10 +19,13 @@ public class Customer {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long customerId;
 
+    @NotEmpty
     private String customerName;
 
+    @NotEmpty
     private String customerEmail;
 
+    @NotEmpty
     private Integer customerPhone;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.MERGE)
