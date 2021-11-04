@@ -9,7 +9,6 @@ import com.saltpay.test.repositories.AccountRepository;
 import com.saltpay.test.repositories.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,8 +50,9 @@ public class TransactionServiceImpl implements TransactionService{
      * @return new account balance details
      */
     @Override
-    public AccountTransactionDTO depositToOwnAccount(Account transaction) {
-        Account accounts = getActualBalance(transaction.getAccNo());
+    public AccountTransactionDTO depositToOwnAccount(Transaction transaction) {
+
+        Account accounts = getActualBalance(transaction.getSenderAccNo());
 
         //check if account exists
         if (accounts == null){
@@ -64,7 +64,7 @@ public class TransactionServiceImpl implements TransactionService{
             double depositedAmount = transaction.getTransactionAmount();
             double newBalance = minBalance + depositedAmount;
 
-            Account account = getAccount(transaction.getAccNo());
+            Account account = getAccount(transaction.getSenderAccNo());
             Transaction transaction1 = new Transaction();
             transaction1.setTransactionType(TransactionType.DEPOSIT);
             transaction1.setTransactionAmount(depositedAmount);
@@ -79,8 +79,8 @@ public class TransactionServiceImpl implements TransactionService{
      * @return new account balance details
      */
     @Override
-    public AccountTransactionDTO accountToAccountTransfer(Account newTransaction) {
-        Account senderAccount = getActualBalance(newTransaction.getAccNo());
+    public AccountTransactionDTO accountToAccountTransfer(Transaction newTransaction) {
+        Account senderAccount = getActualBalance(newTransaction.getSenderAccNo());
         Account receiverAccount = getActualBalance(newTransaction.getReceiverAccNo());
 
         //check if both sender and receiver accounts exist
@@ -97,7 +97,7 @@ public class TransactionServiceImpl implements TransactionService{
             double depositedAmount = newTransaction.getTransactionAmount();
             double newSenderBalance = senderMinBalance - depositedAmount;
 
-            Account account = accountRepository.getAccountByAccNo(newTransaction.getAccNo());
+            Account account = accountRepository.getAccountByAccNo(newTransaction.getSenderAccNo());
             Transaction senderTransaction = new Transaction();
             senderTransaction.setTransactionType(TransactionType.TRANSFER_OUT);
             senderTransaction.setTransactionAmount(newTransaction.getTransactionAmount());
@@ -114,6 +114,7 @@ public class TransactionServiceImpl implements TransactionService{
             Account account1 = getAccount(newTransaction.getReceiverAccNo());
             Transaction receiverTransaction = new Transaction();
             receiverTransaction.setTransactionType(TransactionType.TRANSFER_IN);
+            receiverTransaction.setTransactionAmount(depositedAmount);
 
             //update receiver balance
             setBalance(account1,newReceiverBalance, receiverTransaction);

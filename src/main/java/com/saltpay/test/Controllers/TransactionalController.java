@@ -3,6 +3,7 @@ package com.saltpay.test.Controllers;
 import com.saltpay.test.DTO.AccountTransactionDTO;
 import com.saltpay.test.DTO.TransactionDTO;
 import com.saltpay.test.models.Account;
+import com.saltpay.test.models.Transaction;
 import com.saltpay.test.response.ResponseHandler;
 import com.saltpay.test.services.TransactionService;
 import org.springframework.http.HttpEntity;
@@ -51,12 +52,12 @@ public class TransactionalController {
 
     /**
      * Handles deposit to own account
-     * @param newAccount
+     * @param newTransaction
      * @return new account balance
      */
     @PostMapping("/api/v1/transaction/deposit")
-    public ResponseEntity<Object> depositToOwnAccount(@Valid @RequestBody Account newAccount)  {
-        AccountTransactionDTO transaction = transactionService.depositToOwnAccount(newAccount);
+    public ResponseEntity<Object> depositToOwnAccount(@Valid @RequestBody Transaction newTransaction)  {
+        AccountTransactionDTO transaction = transactionService.depositToOwnAccount(newTransaction);
         return getAccountTransactionDTO(transaction);
     }
 
@@ -66,7 +67,7 @@ public class TransactionalController {
      * @return successful transaction details
      */
     @PostMapping("/api/v1/transaction/transfer")
-    public ResponseEntity<Object> accountToAccountTransfer(@Valid @RequestBody Account newTransaction) {
+    public ResponseEntity<Object> accountToAccountTransfer(@Valid @RequestBody Transaction newTransaction) {
         AccountTransactionDTO transaction = transactionService.accountToAccountTransfer(newTransaction);
         return getAccountTransactionDTO(transaction);
     }

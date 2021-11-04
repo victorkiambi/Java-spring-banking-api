@@ -3,24 +3,24 @@ version: '3'
 services:
 
   app:
-    image: spring-banking-api:latest
-    build:
-      context: .
+    image: static254/spring-banking-api:1.0.0
+#    build:
+#      context: .
     container_name: app
     ports:
-      - 8081:8081
+      - 8081:8080
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3307/banking
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/banking
       - SPRING_DATASOURCE_USERNAME=springuser
       - SPRING_DATASOURCE_PASSWORD=ThePassword
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-
-    depends_on:
-      - docker-mysql
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create
+    links:
+      - db
+    restart: on-failure
     networks:
       - banking
 
-  docker-mysql:
+  db:
     image: mysql:8.0
     container_name: db
     environment:
@@ -28,6 +28,7 @@ services:
       - MYSQL_DATABASE=banking
       - MYSQL_USER=springuser
       - MYSQL_PASSWORD=ThePassword
+      - MYSQL_ROOT_HOST=%
     ports:
       - 3307:3306
     networks:

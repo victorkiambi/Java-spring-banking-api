@@ -2,6 +2,7 @@ package com.saltpay.test.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,13 +22,18 @@ public class Account{
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_generator")
     @SequenceGenerator(name="account_generator", sequenceName = "account_seq", initialValue = 1000, allocationSize=50)
 
+    @NotNull
     private Long accNo;
+
+    @NotNull
     private String accName;
+
+    @NotNull
     private String accBranch;
+
+    @NotNull
     private double minBalance;
 
-    private transient double transactionAmount;
-    private transient Long receiverAccNo;
 
     @ManyToOne( fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
@@ -38,11 +44,6 @@ public class Account{
     @JsonIgnore
     private List<Transaction> transactions = new ArrayList<>();
 
-
-    public Account (Long accNo, double transactionAmount) {
-        this.accNo = accNo;
-        this.transactionAmount = transactionAmount;
-    }
 
 
     public void addTransaction(Transaction transaction){

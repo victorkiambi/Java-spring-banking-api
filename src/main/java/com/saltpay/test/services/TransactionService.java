@@ -2,7 +2,7 @@ package com.saltpay.test.services;
 
 import com.saltpay.test.DTO.AccountTransactionDTO;
 import com.saltpay.test.DTO.TransactionDTO;
-import com.saltpay.test.models.Account;
+import com.saltpay.test.models.Transaction;
 
 import java.util.List;
 
@@ -20,12 +20,12 @@ public interface TransactionService {
      * @param transaction
      * @return new account balance details
      */
-    AccountTransactionDTO depositToOwnAccount(Account transaction);
+    AccountTransactionDTO depositToOwnAccount(Transaction transaction);
 
     /**
      * Handles account to account transfers
      * @param newTransaction
      * @return new account balance details
      */
-    AccountTransactionDTO accountToAccountTransfer(Account newTransaction);
+    AccountTransactionDTO accountToAccountTransfer(Transaction newTransaction);
 }
