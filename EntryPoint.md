@@ -1,8 +1,8 @@
-##SaltPay banking api code challenge
+##banking api 
 
 ###Initializing project with docker
 1. Run docker network create banking-api
-2. docker run --name db --network banking-api -e MYSQL_USER=springuser -e MYSQL_DATABASE=ThePassword -d mysql:8
+2. docker run --name db --network banking-api -e MYSQL_USER=springuser -e MYSQL_DATABASE=ThePassword -d mysql:8.0
 3. docker  run --network banking-api --name spring-banking-api -p 8081:8081 -d spring-banking-api
 
 ###Regular initialization
