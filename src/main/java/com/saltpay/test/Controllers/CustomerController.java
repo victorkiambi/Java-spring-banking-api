@@ -37,7 +37,7 @@ public class CustomerController {
     }
 
     /**
-     * Get customer details via cutomer Id
+     * Get customer details via customer Id
      *
      * @param customerId
      * @return single customer details

@@ -16,5 +16,5 @@
 2. Make sure you have mysql installed
 3. Run app via mvn spring-boot:run
 
-- Import SaltPay-Banking-Api.postman_collection.json to postman.
+- Import Banking-Api.postman_collection.json to postman.
 - Make requests via postman

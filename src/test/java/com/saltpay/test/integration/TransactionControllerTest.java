@@ -70,19 +70,19 @@ public class TransactionControllerTest {
      * Test deposit to own personal account
      * @throws Exception
      */
-//    @Test
-//    public void testDepositToOwnAccount() throws  Exception{
-//        AccountTransactionDTO account = new AccountTransactionDTO(1000L, 500);
-//        Mockito.when(transactionService.depositToOwnAccount(ArgumentMatchers.any()))
-//                .thenReturn(account);
-//        String json = "{\"senderAccNo\":1000,\"transactionAmount\":310}";
-//        mockMvc.perform(MockMvcRequestBuilders
-//                .post("/api/v1/transaction/deposit").contentType(MediaType.APPLICATION_JSON)
-//                .content(json)
-//                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
-//                .andExpect(jsonPath("$.message", Matchers.equalTo("Success")));
-//
-//    }
+    @Test
+    public void testDepositToOwnAccount() throws  Exception{
+        AccountTransactionDTO account = new AccountTransactionDTO(1000L, 500);
+        Mockito.when(transactionService.depositToOwnAccount(ArgumentMatchers.any()))
+                .thenReturn(account);
+        String json = "{\"senderAccNo\":1000,\"transactionAmount\":310}";
+        mockMvc.perform(MockMvcRequestBuilders
+                .post("/api/v1/transaction/deposit").contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
+                .andExpect(jsonPath("$.message", Matchers.equalTo("Success")));
+
+    }
 
     /**
      * Test customer/account to customer/account transfer

@@ -3,7 +3,7 @@ version: '3'
 services:
 
   app:
-    image: static254/spring-banking-api:1.0.0
+    image: static254/spring-banking-api:1.0.1
 #    build:
 #      context: .
     container_name: app
