@@ -68,6 +68,7 @@ public class TransactionServiceImpl implements TransactionService{
             Transaction transaction1 = new Transaction();
             transaction1.setTransactionType(TransactionType.DEPOSIT);
             transaction1.setTransactionAmount(depositedAmount);
+            transaction1.setReceiverAccNo(transaction.getSenderAccNo());
 
             return setBalance(account, newBalance, transaction1);
         }

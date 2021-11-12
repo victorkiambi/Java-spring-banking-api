@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.UUID;
 
 @Data
@@ -28,7 +29,7 @@ public class Transaction {
     @NotNull
     private TransactionType transactionType;
 
-    @NotNull
+    @NotBlank
     private transient Long senderAccNo;
 
     @NotNull
